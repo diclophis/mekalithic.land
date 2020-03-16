@@ -1,0 +1,15 @@
+#
+
+Wkndr.server_side { |server|
+  server.live("/", "mekalithic.land") do |cn, phr, mab|
+    mab.h1 Time.now
+
+    mab.script(:type => :module, :src => "three.js") do
+    end
+
+    mab.div(:id => Time.now.to_i) do
+      mab.script(:type => :module, :src => "mekalithic.js") do
+      end
+    end
+  end
+}
