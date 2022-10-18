@@ -1,0 +1,64 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mekalithic-land
+  labels:
+    app: mekalithic-land
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mekalithic-land
+  template:
+    metadata:
+      labels:
+        app: mekalithic-land
+    spec:
+      volumes: []
+      containers:
+      - name: main
+        image: mekalithic.land:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/var/lib/wkndr/release/wkndr.mruby", "--server=/var/lib/wkndr/public", "--no-client"]
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            memory: 100M
+            cpu: 50m
+          requests:
+            memory: 100M
+            cpu: 10m
+        volumeMounts: []
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mekalithic-land-service
+spec:
+  type: NodePort
+  selector:
+    app: mekalithic-land
+  ports:
+  - protocol: TCP
+    name: app
+    port: 8000
+    nodePort: 32375
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mekalithic-land-vhost
+  annotations:
+    ingress.class: wkndr
+spec:
+  rules:
+  - host: mekalithic-land.bardin.haus
+    http:
+      paths:
+      - backend:
+          serviceName: mekalithic-land-service
+          servicePort: 8000

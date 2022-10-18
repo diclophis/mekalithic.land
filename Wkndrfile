@@ -1,6 +1,6 @@
 #
 
-Wkndr.server_side { |server|
+Wkndr.server_side("main") { |gl, server|
   server.live("/", "mekalithic.land") do |cn, phr, mab|
     mab.script(:type => :module, :src => "three.js") do
     end
@@ -8,7 +8,7 @@ Wkndr.server_side { |server|
     mab.div(:id => "scene-container") do
     end
 
-    mab.div(:id => Time.now.to_i) do
+    mab.div do
       mab.script(:type => :module, :src => "mekalithic.js") do
       end
     end
